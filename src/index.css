@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  body {
+    @apply bg-gray-950 text-white min-h-screen antialiased;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-6 py-3 bg-tiktok-pink text-white font-bold rounded-full hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-tiktok-pink/20 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95;
+  }
+  
+  .btn-secondary {
+    @apply px-6 py-3 bg-gray-800 text-white font-semibold rounded-full hover:bg-gray-700 transition-all duration-300 border border-gray-700 hover:border-gray-500;
+  }
+
+  .glass-panel {
+    @apply bg-gray-900/60 backdrop-blur-md border border-gray-800 rounded-2xl shadow-xl;
+  }
+}
