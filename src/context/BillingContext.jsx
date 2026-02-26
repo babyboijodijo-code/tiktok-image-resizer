@@ -7,7 +7,7 @@ const BillingContext = createContext(null)
 // CONFIGURATION
 const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/eVq00j4GG10S1ni6CoeAg00'
 const REVENUECAT_KEYS = {
-    ios: 'test_goneZYUbkZwJFWoaKnSBgTAofpU', // Replace with production key when ready
+    ios: 'test_HEWvdqzyAHaexwgsIbvtezDuGwu', // Replace with production key when ready
     android: 'goog_YOUR_ANDROID_API_KEY', // Add Android key here when ready
 }
 
@@ -87,7 +87,7 @@ export const BillingProvider = ({ children }) => {
             // Import PurchasesUI dynamically to ensure it's available only when this is running
             const { PurchasesUI } = await import('@revenuecat/purchases-capacitor-ui');
             const result = await PurchasesUI.presentPaywall();
-            
+
             // Re-check entitlements after the paywall closes just in case a purchase was made
             const customerInfo = await Purchases.getCustomerInfo();
             checkEntitlements(customerInfo);
@@ -102,11 +102,11 @@ export const BillingProvider = ({ children }) => {
             alert('Customer Center is only available on iOS/Android.');
             return;
         }
-        
+
         try {
             const { PurchasesUI } = await import('@revenuecat/purchases-capacitor-ui');
             await PurchasesUI.presentCustomerCenter();
-            
+
             // After closing Customer Center, refresh the customer info just in case they cancelled or updated a sub
             const customerInfo = await Purchases.getCustomerInfo();
             checkEntitlements(customerInfo);
