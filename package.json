@@ -14,7 +14,7 @@
     "@capacitor/cli": "^8.1.0",
     "@capacitor/core": "^8.1.0",
     "@capacitor/ios": "^8.1.0",
-    "@revenuecat/purchases-capacitor": "^12.1.2",
+    "@revenuecat/purchases-capacitor": "^12.2.0",
     "@revenuecat/purchases-capacitor-ui": "^12.2.0",
     "caniuse-lite": "^1.0.30001770",
     "react": "^19.2.0",

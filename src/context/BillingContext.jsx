@@ -7,7 +7,7 @@ const BillingContext = createContext(null)
 // CONFIGURATION
 const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/eVq00j4GG10S1ni6CoeAg00'
 const REVENUECAT_KEYS = {
-    ios: 'test_HEWvdqzyAHaexwgsIbvtezDuGwu', // Replace with production key when ready
+    ios: 'appl_XCRGCmBZPegiAXOGyXhMKLQKchA',
     android: 'goog_YOUR_ANDROID_API_KEY', // Add Android key here when ready
 }
 
@@ -84,16 +84,28 @@ export const BillingProvider = ({ children }) => {
 
     const handleNativePurchase = async () => {
         try {
-            // Import PurchasesUI dynamically to ensure it's available only when this is running
-            const { PurchasesUI } = await import('@revenuecat/purchases-capacitor-ui');
-            const result = await PurchasesUI.presentPaywall();
+            const { current } = await Purchases.getOfferings()
+            if (!current || current.availablePackages.length === 0) {
+                alert('No packages available. Please check your RevenueCat configuration.')
+                return
+            }
+            // Prefer lifetime > annual > monthly > first available
+            const pkg = current.lifetime
+                || current.annual
+                || current.monthly
+                || current.availablePackages[0]
 
-            // Re-check entitlements after the paywall closes just in case a purchase was made
-            const customerInfo = await Purchases.getCustomerInfo();
-            checkEntitlements(customerInfo);
+            const { customerInfo } = await Purchases.purchasePackage({ aPackage: pkg })
+            // DEBUG: show active entitlement keys so we can verify the identifier
+            const activeKeys = Object.keys(customerInfo.entitlements.active)
+            alert('Active entitlements after purchase: ' + JSON.stringify(activeKeys))
+            checkEntitlements(customerInfo)
         } catch (error) {
-            // This catches errors like user cancellations of the paywall or if no paywalls are configured in the dashboard
-            console.error('Paywall presentation failed or was dismissed', error);
+            console.error('Purchase failed:', error)
+            const cancelled = error?.code === 'PURCHASE_CANCELLED' || error?.userCancelled
+            if (!cancelled) {
+                alert('Purchase failed. Please try again.')
+            }
         }
     }
 
@@ -154,6 +166,7 @@ export const BillingProvider = ({ children }) => {
             isNative,
             initiatePurchase,
             restorePurchases,
+            presentCustomerCenter,
             debugTogglePro
         }}>
             {children}
